@@ -11,7 +11,7 @@
             "mode": "auto",
             "program": "${workspaceRoot}/cmd/main.go",
             "env": {},
-            "args": ["s"]
+            "args": ["s", "-cp", "${workspaceRoot}/configs"]
         }
     ]
 }

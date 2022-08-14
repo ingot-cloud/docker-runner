@@ -1,9 +1,15 @@
 package log
 
 import (
-	ioc "docker-runner/pkg/framework/ioc"
+	"docker-runner/pkg/framework/common/utils"
+	"fmt"
+	"io"
+	"os"
+	"time"
 
 	"github.com/alibaba/ioc-golang/extension/config"
+	"github.com/gin-gonic/gin"
+	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/sirupsen/logrus"
 )
 
@@ -36,7 +42,29 @@ func (c *LogConfigurer) Configure() {
 
 // Run 执行
 func (c *LogConfigurer) Run() (func(), error) {
-	return ioc.EmptyCleanFn, nil
+	var file *os.File
+	if c.Output.Value() != "" {
+		switch c.Output.Value() {
+		case "stdout":
+			SetOutput(os.Stdout)
+		case "stderr":
+			SetOutput(os.Stderr)
+		case "file":
+			if dir := c.OutputFileDir.Value(); dir != "" {
+				fileWriter, err := c.rotate()
+				if err != nil {
+					return func() {}, err
+				}
+				gin.DefaultWriter = io.MultiWriter(fileWriter, os.Stdout)
+				SetOutput(fileWriter)
+			}
+		}
+	}
+	return func() {
+		if file != nil {
+			file.Close()
+		}
+	}, nil
 }
 
 // SetLevel 设定日志级别
@@ -58,4 +86,28 @@ func (c *LogConfigurer) setFormatter(format string) {
 			TimestampFormat: "2006-01-02 15:04:05",
 		})
 	}
+}
+
+func (c *LogConfigurer) rotate() (io.Writer, error) {
+	if ok, _ := utils.PathExists(c.OutputFileDir.Value()); !ok {
+		// directory not exist
+		fmt.Println("create log directory")
+		err := os.Mkdir(c.OutputFileDir.Value(), os.ModePerm)
+		if err != nil {
+			fmt.Println("mkdir error - ", err)
+		}
+	}
+	writer, err := rotatelogs.New(
+		fmt.Sprintf("%s%s%s", c.OutputFileDir.Value(), string(os.PathSeparator), "%Y-%m-%d-%H-%M.log"),
+		// generate soft link, point to latest log file
+		rotatelogs.WithLinkName(c.LogSoftLink.Value()),
+		// maximum time to save log files
+		rotatelogs.WithMaxAge(7*24*time.Hour),
+		// time period of log file switching
+		rotatelogs.WithRotationTime(24*time.Hour),
+	)
+	if err != nil {
+		return nil, err
+	}
+	return writer, nil
 }

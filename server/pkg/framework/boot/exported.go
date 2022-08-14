@@ -7,6 +7,7 @@ import (
 
 	"github.com/alibaba/ioc-golang"
 	"github.com/alibaba/ioc-golang/config"
+	"github.com/alibaba/ioc-golang/logger"
 )
 
 type RunConfig struct {
@@ -25,6 +26,9 @@ type RunConfig struct {
 
 // Run 运行
 func Run(con RunConfig) error {
+	logger.Disable()
+	printLogo()
+
 	var opts []config.Option
 	if con.ConfigName != "" {
 		opts = append(opts, config.WithConfigName(con.ConfigName))
