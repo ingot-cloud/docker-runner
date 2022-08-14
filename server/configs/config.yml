@@ -1,0 +1,13 @@
+ingot:
+  # logger configuration
+  log:
+    # 日志级别 1:fatal 2:error,3:warn,4:info,5:debug,6:trace
+    level: 5
+    # 日志格式（text/json）
+    format: "text" 
+    # 日志输出(stdout/stderr/file)
+    output: 'stdout'
+    # 指定日志输出的文件路径
+    outputFileDir: './.log'
+    # 最新日志软连接
+    logSoftLink: './.log/today'
