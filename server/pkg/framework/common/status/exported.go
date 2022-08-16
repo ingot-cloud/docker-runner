@@ -11,7 +11,13 @@ const (
 )
 
 var statusText = map[string]string{
-	Success: "success",
+	Success:             "Success",
+	BadRequest:          "",
+	Unauthorized:        "",
+	Forbidden:           "",
+	NotFound:            "",
+	MethodNotAllowed:    "",
+	InternalServerError: "未知错误",
 }
 
 // StatusText 返回状态码文本
