@@ -6,6 +6,9 @@ import (
 	"github.com/alibaba/ioc-golang/extension/config"
 )
 
+// Order Http server 顺序
+const Order = 10
+
 // +ioc:autowire=true
 // +ioc:autowire:type=allimpls
 // +ioc:autowire:allimpls:interface=docker-runner/pkg/framework/ioc.ModuleConfigurer
@@ -41,7 +44,7 @@ type HTTPServer struct {
 
 // Order 执行顺序，从小到大
 func (s *HTTPServer) Order() uint {
-	return 1
+	return Order
 }
 
 // Configure 配置

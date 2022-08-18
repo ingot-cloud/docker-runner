@@ -17,6 +17,9 @@ var (
 	std = logrus.New()
 )
 
+// Order 日志顺序
+const Order = 0
+
 // +ioc:autowire=true
 // +ioc:autowire:type=allimpls
 // +ioc:autowire:allimpls:interface=docker-runner/pkg/framework/ioc.ModuleConfigurer
@@ -31,7 +34,7 @@ type LogConfigurer struct {
 
 // Order 排序
 func (c *LogConfigurer) Order() uint {
-	return 0
+	return Order
 }
 
 // Configure 配置方法

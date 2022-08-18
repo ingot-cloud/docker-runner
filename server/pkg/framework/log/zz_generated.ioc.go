@@ -6,10 +6,11 @@
 package log
 
 import (
-	"docker-runner/pkg/framework/ioc"
+	ioc "docker-runner/pkg/framework/ioc"
 	autowire "github.com/alibaba/ioc-golang/autowire"
 	normal "github.com/alibaba/ioc-golang/autowire/normal"
 	allimpls "github.com/alibaba/ioc-golang/extension/autowire/allimpls"
+	iox "io"
 )
 
 func init() {
@@ -42,6 +43,7 @@ type logConfigurer_ struct {
 	Run_          func() (func(), error)
 	setLevel_     func(level int)
 	setFormatter_ func(format string)
+	rotate_       func() (iox.Writer, error)
 }
 
 func (l *logConfigurer_) Order() uint {
@@ -64,12 +66,17 @@ func (l *logConfigurer_) setFormatter(format string) {
 	l.setFormatter_(format)
 }
 
+func (l *logConfigurer_) rotate() (iox.Writer, error) {
+	return l.rotate_()
+}
+
 type LogConfigurerIOCInterface interface {
 	Order() uint
 	Configure()
 	Run() (func(), error)
 	setLevel(level int)
 	setFormatter(format string)
+	rotate() (iox.Writer, error)
 }
 
 var _logConfigurerSDID string
