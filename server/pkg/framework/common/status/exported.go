@@ -2,7 +2,7 @@ package status
 
 // Standard status
 const (
-	Success             = "S200"
+	OK                  = "S200"
 	BadRequest          = "S400"
 	Unauthorized        = "S401"
 	Forbidden           = "S403"
@@ -15,7 +15,7 @@ const (
 )
 
 var statusText = map[string]string{
-	Success:             "OK",
+	OK:                  "OK",
 	BadRequest:          "Bad Request",
 	Unauthorized:        "Unauthorized",
 	Forbidden:           "Forbidden",
