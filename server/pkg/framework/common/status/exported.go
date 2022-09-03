@@ -2,16 +2,16 @@ package status
 
 // Standard status
 const (
-	OK                  = "S200"
-	BadRequest          = "S400"
-	Unauthorized        = "S401"
-	Forbidden           = "S403"
-	NotFound            = "S404"
-	MethodNotAllowed    = "S405"
-	InternalServerError = "S500"
+	OK                  = "S0200"
+	BadRequest          = "S0400"
+	Unauthorized        = "S0401"
+	Forbidden           = "S0403"
+	NotFound            = "S0404"
+	MethodNotAllowed    = "S0405"
+	InternalServerError = "S0500"
 
-	IllegalOperation = "S001"
-	IllegalParameter = "S002"
+	IllegalOperation = "S0001"
+	IllegalParameter = "S0002"
 )
 
 var statusText = map[string]string{
